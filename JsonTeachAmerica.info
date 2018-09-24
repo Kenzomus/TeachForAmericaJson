@@ -1,0 +1,6 @@
+name = JsonTeachAmerica
+description = "Create a module to import json data to drupal node"
+core = 7.x
+package = Teach4America
+dependencies[]= migrate
+files [] = JsonTeachAmerica.migrate.inc

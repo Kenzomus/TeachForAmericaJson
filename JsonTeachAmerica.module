@@ -1,0 +1,85 @@
+<?php
+ require_once 'import.php';
+/**
+ * @file
+ *
+ * Implementation of hook_menu for JsonTeach4America
+ */
+function jsonteachamerica_menu() {
+   $items = array();
+   $items['post_import']= array(
+    'title' => 'Import post',
+    'description' => 'Import post in json format to drupal and create a post node for each items',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('import_json_form'),
+    'access arguments' => array('View Import Form'), 
+
+
+    );
+  
+ return $items;
+
+
+}
+/**
+ * Implement hook permission to view and submit the form
+ */
+
+ function jsonteachamerica_permission() {
+   return array('Import Json data' => array(
+      'title' => 'View Import Form',
+      'description' => 'view and submit the form',
+),
+  );
+
+}
+
+/**
+ *define the call back function to retrieve the form
+ */
+ 
+function import_json_form($form, $form_state) {
+
+  $form['web_url']=array(
+    '#title' => t('Source url'),
+     '#type' => 'textfield',
+      '#description' => t('Enter the source url from where we import'),
+      '#required' => TRUE,
+     );
+   $form['submit']= array(
+      '#type' => 'submit',
+      '#value' => t('Import'),
+    );
+    return $form;
+
+   
+
+}
+/**
+* Validation handler for the form to see if it's valid url
+/*
+function import_json_form_validate($form, &$form_state) {
+  $url = $form_state['values']['web_url'];
+  
+
+// Validate url
+  if (!valid_url($url){
+   $message =t('the url %web_url is not a valid url.Please re-enter your address.', array('%web_url' -> $url));
+   form_set_error('web_url', $message);
+   }
+}
+
+/**
+ * form submission handler
+*/
+function import_json_form_submit($form, &$form_state) {
+  // get the url 
+  $url = $form_state['values']['web_url'];
+
+   $myimport = New importjson();
+
+   $json_responses = $myimport->send_request($url);
+
+   $myimport->create_node($json_responses); 
+  
+}
